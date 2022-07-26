@@ -1,0 +1,33 @@
+.print {
+  .table {
+    margin: 10px auto;
+  }
+}
+
+.table {
+  margin: 0 auto;
+  border-collapse: collapse;
+  page-break-before: always;
+  page-break-after: always;
+  td {
+    border: 1px dashed #000;
+    & > div {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden;
+      font-size: 80px; // 最大字体大小
+    }
+  }
+  tfoot {
+    text-align: right;
+  }
+}
+
+@media print {
+  .table {
+    tfoot {
+      display: none;
+    }
+  }
+}
