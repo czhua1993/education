@@ -9,8 +9,8 @@ const countries = Object.values(zh.countries)
 export default function PrintCountry() {
   return (
     <PrintPage
-      content={countries.map((text) => (
-        <AutoFontSize>{text}</AutoFontSize>
+      content={countries.map((text, index) => (
+        <AutoFontSize key={index}>{text}</AutoFontSize>
       ))}
     />
   )

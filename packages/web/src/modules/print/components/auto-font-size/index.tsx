@@ -1,6 +1,8 @@
+import _ from 'lodash'
 import React, { useLayoutEffect, useRef } from 'react'
 
 import styles from './index.module.less'
+import { getLines } from './utils'
 
 interface AutoFontSizeProps {
   fontSize?: number
@@ -23,7 +25,9 @@ export const AutoFontSize = (props: AutoFontSizeProps) => {
 
   return (
     <div ref={ref} className={styles.text} style={{ fontSize }}>
-      {children}
+      {typeof children === 'string'
+        ? getLines(children).map((s, i) => <div key={i}>{s}</div>)
+        : children}
     </div>
   )
 }

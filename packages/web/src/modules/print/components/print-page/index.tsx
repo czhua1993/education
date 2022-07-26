@@ -68,7 +68,7 @@ export const PrintPage = (props: PrintPageProps) => {
                     const index = trIdx * col + tdIdx
                     return (
                       <td key={tdIdx}>
-                        <div style={itemStyle}>{content[index]}</div>
+                        <div style={itemStyle}>{chunk[index]}</div>
                       </td>
                     )
                   })}
