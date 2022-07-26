@@ -1,33 +1,23 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import './App.css'
+import './styles/index.css'
+import './styles/index.less'
 
-function App() {
-  const [count, setCount] = useState(1)
+import {
+  Routes,
+  unstable_HistoryRouter as HistoryRouter,
+} from 'react-router-dom'
 
+import { Route } from './components-x/route'
+import { ErrorBoundary } from './components/error-boundary'
+import { routes } from './configs/routes'
+import { navigation } from './utils/navigation'
+
+const App = () => {
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite +121 React</h1>
-      <div className="card">
-        <button onClick={() => setCount(count => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </div>
+    <ErrorBoundary>
+      <HistoryRouter history={navigation.history}>
+        <Routes>{routes.map((item) => Route(item))}</Routes>
+      </HistoryRouter>
+    </ErrorBoundary>
   )
 }
 

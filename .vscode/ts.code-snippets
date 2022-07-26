@@ -1,0 +1,15 @@
+{
+  "requestGet": {
+    "scope": "typescript",
+    "prefix": "get",
+    "body": [
+      "import { RequestUtil } from '@/utils/request'",
+      "",
+      "export const ${1:func} = async () => {",
+      "  const { data } = await RequestUtil.get('${2:url}')",
+      "  return data",
+      "}"
+    ],
+    "description": "request get"
+  }
+}

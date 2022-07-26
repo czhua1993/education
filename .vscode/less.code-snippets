@@ -1,0 +1,12 @@
+{
+  "antd": {
+    "scope": "less",
+    "prefix": "antd",
+    "body": [
+      "@root-entry-name: variable;",
+      "@import '~antd/lib/${1:component-name}/style/index-pure.less';",
+      "@import '../../../styles/antd/variable.less';"
+    ],
+    "description": "Antd component less"
+  }
+}
