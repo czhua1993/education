@@ -1,3 +1,4 @@
+import { useBoolean } from 'ahooks'
 import { Button } from 'antd'
 import classNames from 'classnames'
 import _ from 'lodash'
@@ -28,6 +29,7 @@ export const PrintPage = (props: PrintPageProps) => {
     col = 4,
     content,
   } = props
+  const [flip, { toggle: toggleFlip }] = useBoolean(false)
   const ref = useRef<HTMLDivElement>(null)
 
   const handlePrint = useReactToPrint({
@@ -47,13 +49,21 @@ export const PrintPage = (props: PrintPageProps) => {
   const itemStyle = useMemo(() => {
     return {
       width: Math.floor(parseInt(style.width) / col) - 2 + 'mm',
-      height: Math.floor(parseInt(style.height) / row) + 'mm',
+      height: Math.floor(parseInt(style.height) / row) - 2 + 'mm',
     }
   }, [style, row, col])
 
   return (
     <div className="flex flex-col items-center pt-3">
-      <div style={{ width: style.width }}>
+      <div
+        className="flex justify-between items-center"
+        style={{ width: style.width }}
+      >
+        <div>
+          <Button size="large" onClick={toggleFlip}>
+            当前{flip ? '反' : '正'}面，点击翻转
+          </Button>
+        </div>
         <Button size="large" type="primary" onClick={handlePrint}>
           打印
         </Button>
@@ -65,10 +75,14 @@ export const PrintPage = (props: PrintPageProps) => {
               {new Array(row).fill('').map((_tr, trIdx) => (
                 <tr key={trIdx}>
                   {new Array(col).fill('').map((_td, tdIdx) => {
-                    const index = trIdx * col + tdIdx
+                    const start = trIdx * col
+                    const end = (trIdx + 1) * col
+                    const list = flip
+                      ? chunk.slice(start, end).reverse()
+                      : chunk.slice(start, end)
                     return (
                       <td key={tdIdx}>
-                        <div style={itemStyle}>{chunk[index]}</div>
+                        <div style={itemStyle}>{list[tdIdx]}</div>
                       </td>
                     )
                   })}
