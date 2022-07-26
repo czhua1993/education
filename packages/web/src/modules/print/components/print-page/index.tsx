@@ -1,6 +1,8 @@
+import { Button } from 'antd'
 import classNames from 'classnames'
 import _ from 'lodash'
-import { useMemo } from 'react'
+import { useMemo, useRef } from 'react'
+import { useReactToPrint } from 'react-to-print'
 
 import styles from './index.module.less'
 import { getPageStyle } from './utils'
@@ -26,8 +28,16 @@ export const PrintPage = (props: PrintPageProps) => {
     col = 4,
     content,
   } = props
+  const ref = useRef<HTMLDivElement>(null)
 
-  const chunks = _.chunk(content, row * col)
+  const handlePrint = useReactToPrint({
+    content: () => ref.current!,
+  })
+
+  const chunks = useMemo(
+    () => _.chunk(content, row * col),
+    [content, row * col]
+  )
 
   const style = useMemo(
     () => getPageStyle(paper, orientation),
@@ -36,14 +46,19 @@ export const PrintPage = (props: PrintPageProps) => {
 
   const itemStyle = useMemo(() => {
     return {
-      width: Math.floor(parseInt(style.width) / col) + 'mm',
+      width: Math.floor(parseInt(style.width) / col) - 2 + 'mm',
       height: Math.floor(parseInt(style.height) / row) + 'mm',
     }
   }, [style, row, col])
 
   return (
-    <div className={classNames(styles.print)}>
-      <div>
+    <div className="flex flex-col items-center pt-3">
+      <div style={{ width: style.width }}>
+        <Button size="large" type="primary" onClick={handlePrint}>
+          打印
+        </Button>
+      </div>
+      <div ref={ref}>
         {chunks.map((chunk, index) => (
           <table key={index} className={classNames(styles.table)} style={style}>
             <tbody>

@@ -1,22 +1,17 @@
-.print {
-  .table {
-    margin: 10px auto;
-  }
-}
-
 .table {
-  margin: 0 auto;
+  margin: 10px auto;
+  padding: 0;
   border-collapse: collapse;
   page-break-before: always;
   page-break-after: always;
   td {
+    text-align: center;
     border: 1px dashed #000;
     & > div {
       display: inline-flex;
       justify-content: center;
       align-items: center;
       overflow: hidden;
-      font-size: 80px; // 最大字体大小
     }
   }
   tfoot {
@@ -26,6 +21,7 @@
 
 @media print {
   .table {
+    margin: 1mm auto;
     tfoot {
       display: none;
     }

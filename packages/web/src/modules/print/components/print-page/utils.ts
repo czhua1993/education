@@ -1,3 +1,10 @@
+/**
+ * A4 210*297
+ * A5 148*210
+ * @param paper
+ * @param orientation
+ * @returns
+ */
 export const getPageStyle = (
   paper: 'A4' | 'A5',
   orientation: 'horizontal' | 'vertical'
@@ -5,15 +12,15 @@ export const getPageStyle = (
   if (paper === 'A4') {
     return orientation === 'horizontal'
       ? {
-          width: '297mm',
-          height: '210mm',
+          width: '295mm',
+          height: '208mm',
         }
-      : { width: '210mm', height: '297mm' }
+      : { width: '208mm', height: '295mm' }
   }
   return orientation === 'horizontal'
     ? {
-        width: '210mm',
-        height: '148mm',
+        width: '208mm',
+        height: '146mm',
       }
-    : { width: '148mm', height: '210mm' }
+    : { width: '146mm', height: '208mm' }
 }
