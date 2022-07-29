@@ -1,3 +1,11 @@
+import { useMount } from 'ahooks'
+
+import { navigation } from '@/utils/navigation'
+
 export default function Index() {
-  return <div>PageIndex</div>
+  useMount(() => {
+    navigation.push('/print/country')
+  })
+
+  return null
 }

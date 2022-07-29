@@ -1,3 +1,11 @@
+import { useMount } from 'ahooks'
+
+import { navigation } from '@/utils/navigation'
+
 export default function Index() {
-  return <div>Index</div>
+  useMount(() => {
+    navigation.push('/print')
+  })
+
+  return null
 }

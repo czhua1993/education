@@ -1,3 +1,4 @@
+import classNames from 'classnames'
 import _ from 'lodash'
 import React, { useLayoutEffect, useRef } from 'react'
 
@@ -6,17 +7,22 @@ import { getLines } from './utils'
 
 interface AutoFontSizeProps {
   fontSize?: number
+  /** 英文 */
+  isEnglish?: boolean
   children: React.ReactNode
 }
 
 export const AutoFontSize = (props: AutoFontSizeProps) => {
-  const { children, fontSize = 80 } = props
+  const { children, fontSize = 80, isEnglish = false } = props
   const ref = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
     if (ref.current) {
       const parent = ref.current.parentNode as HTMLDivElement
-      while (ref.current.clientWidth > parent.clientWidth) {
+      while (
+        ref.current.clientWidth > parent.clientWidth &&
+        parseInt(ref.current.style.fontSize) > 12
+      ) {
         ref.current.style.fontSize =
           parseInt(ref.current.style.fontSize) - 2 + 'px'
       }
@@ -24,9 +30,15 @@ export const AutoFontSize = (props: AutoFontSizeProps) => {
   })
 
   return (
-    <div ref={ref} className={styles.text} style={{ fontSize }}>
+    <div
+      ref={ref}
+      className={classNames(styles.text, {
+        [styles.english]: isEnglish,
+      })}
+      style={{ fontSize }}
+    >
       {typeof children === 'string'
-        ? getLines(children).map((s, i) => <div key={i}>{s}</div>)
+        ? getLines(children, isEnglish).map((s, i) => <div key={i}>{s}</div>)
         : children}
     </div>
   )

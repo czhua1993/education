@@ -1,17 +1,19 @@
 import { Tabs } from 'antd'
+import { findAlpha2 } from 'iso3166-lookup'
 import _ from 'lodash'
 import { useState } from 'react'
 
 import { AutoFontSize } from '../../components/auto-font-size'
 import { PrintPage } from '../../components/print-page'
+import { Alpha2List } from './config'
+import { countryList } from './detail'
 import { Flags } from './flags'
 import zh from './zh.json'
 
 const { TabPane } = Tabs
 
-const codeList = Object.keys(zh.countries)
-const textList = Object.values(zh.countries)
-const list = _.flatMap(textList.map((key, index) => [key, codeList[index]]))
+const textList = Alpha2List.map((key) => (zh.countries as any)[key])
+const list = _.flatMap(textList.map((key, index) => [key, Alpha2List[index]]))
 
 export default function PrintCountry() {
   const [tab, setTab] = useState('1')
@@ -27,7 +29,7 @@ export default function PrintCountry() {
         </TabPane>
         <TabPane tab="国旗" key="2">
           <PrintPage
-            content={codeList.map((key, index) => {
+            content={Alpha2List.map((key, index) => {
               const Flag = Flags[key]
               return Flag ? (
                 <Flag
@@ -51,6 +53,15 @@ export default function PrintCountry() {
                 <AutoFontSize key={index}>{key}</AutoFontSize>
               )
             })}
+          />
+        </TabPane>
+        <TabPane tab="国家（英文）" key="4">
+          <PrintPage
+            content={countryList.map((text, index) => (
+              <AutoFontSize key={index} isEnglish>
+                {text}
+              </AutoFontSize>
+            ))}
           />
         </TabPane>
       </Tabs>
