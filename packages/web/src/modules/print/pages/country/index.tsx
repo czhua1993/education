@@ -1,5 +1,4 @@
 import { Tabs } from 'antd'
-import { findAlpha2 } from 'iso3166-lookup'
 import _ from 'lodash'
 import { useState } from 'react'
 

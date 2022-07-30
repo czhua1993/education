@@ -4,6 +4,7 @@ import BasicLayout from '@/layouts/basic'
 
 const PrintIndex = React.lazy(() => import('./pages/index'))
 const PrintCountry = React.lazy(() => import('./pages/country'))
+const PrintPoetry = React.lazy(() => import('./pages/poetry'))
 
 export const printRoutes = [
   {
@@ -17,6 +18,10 @@ export const printRoutes = [
       {
         path: 'country',
         component: PrintCountry,
+      },
+      {
+        path: 'poetry',
+        component: PrintPoetry,
       },
     ],
   },

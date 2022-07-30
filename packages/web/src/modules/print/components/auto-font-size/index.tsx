@@ -10,10 +10,11 @@ interface AutoFontSizeProps {
   /** 英文 */
   isEnglish?: boolean
   children: React.ReactNode
+  lineHeight?: number
 }
 
 export const AutoFontSize = (props: AutoFontSizeProps) => {
-  const { children, fontSize = 80, isEnglish = false } = props
+  const { children, fontSize = 80, isEnglish = false, lineHeight = 1 } = props
   const ref = useRef<HTMLDivElement>(null)
 
   useLayoutEffect(() => {
@@ -35,7 +36,7 @@ export const AutoFontSize = (props: AutoFontSizeProps) => {
       className={classNames(styles.text, {
         [styles.english]: isEnglish,
       })}
-      style={{ fontSize }}
+      style={{ fontSize, lineHeight }}
     >
       {typeof children === 'string'
         ? getLines(children, isEnglish).map((s, i) => <div key={i}>{s}</div>)

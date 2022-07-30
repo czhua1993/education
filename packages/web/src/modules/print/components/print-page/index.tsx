@@ -19,6 +19,8 @@ interface PrintPageProps {
   col?: number
   /** 打印内容 */
   content: React.ReactNode[]
+  /** 无边框 */
+  noBorder?: boolean
 }
 
 export const PrintPage = (props: PrintPageProps) => {
@@ -28,6 +30,7 @@ export const PrintPage = (props: PrintPageProps) => {
     row = 8,
     col = 4,
     content,
+    noBorder,
   } = props
   const [flip, { toggle: toggleFlip }] = useBoolean(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -70,7 +73,13 @@ export const PrintPage = (props: PrintPageProps) => {
       </div>
       <div ref={ref}>
         {chunks.map((chunk, index) => (
-          <table key={index} className={classNames(styles.table)} style={style}>
+          <table
+            key={index}
+            className={classNames(styles.table, {
+              [styles.noBorder]: noBorder,
+            })}
+            style={style}
+          >
             <tbody>
               {new Array(row).fill('').map((_tr, trIdx) => (
                 <tr key={trIdx}>
