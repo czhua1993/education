@@ -3,7 +3,11 @@ import { ApolloServer } from 'apollo-server-express'
 import express from 'express'
 import http from 'http'
 
+import { sequelize } from './database/sequelize'
+import { service } from './database/services'
+
 async function startApolloServer(typeDefs: any, resolvers: any) {
+  sequelize.sync() // 初始化数据库
   const app = express()
   const httpServer = http.createServer(app)
   const server = new ApolloServer({
@@ -27,36 +31,43 @@ async function startApolloServer(typeDefs: any, resolvers: any) {
 const typeDefs = gql`
   # Comments in GraphQL strings (such as this one) start with the hash (#) symbol.
 
-  # This "Book" type defines the queryable fields for every book in our data source.
-  type Book {
+  type Poetry {
+    id: ID
+    poetryId: String
     title: String
     author: String
+    paragraphs: String
+    tags: String
+    dynasty: String
+  }
+
+  type PoetryList {
+    count: Int
+    rows: [Poetry]
   }
 
   # The "Query" type is special: it lists all of the available queries that
   # clients can execute, along with the return type for each. In this
   # case, the "books" query returns an array of zero or more Books (defined above).
   type Query {
-    books: [Book]
-    book: Book
+    poetries(offset: Int = 0, limit: Int = 10): PoetryList
+    poetry(id: Int): Poetry
   }
 `
 
-const books = [
-  {
-    title: 'The Awakening',
-    author: 'Kate Chopin',
-  },
-  {
-    title: 'City of Glass',
-    author: 'Paul Auster',
-  },
-]
-
 const resolvers = {
   Query: {
-    books: () => books,
-    book: () => books[0],
+    poetry: (parent, args: { id: number }) => {
+      return service.poetry.findById(args.id)
+    },
+    poetries: (
+      parent,
+      args: { offset: number; limit: number },
+      context,
+      info
+    ) => {
+      return service.poetry.findAndCountAll(args)
+    },
   },
 }
 
