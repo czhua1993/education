@@ -14,22 +14,12 @@ export default function Poetry() {
   return (
     <div style={{ width: '300mm' }} className="mx-auto">
       <Tabs size="large" activeKey={tab} onChange={setTab}>
-        <TabPane tab="83首" key="1">
+        <TabPane tab="奥特曼" key="1">
           <PrintPage
-            paper="A5"
-            row={1}
-            col={1}
-            noBorder
+            row={12}
+            col={9}
             content={list.map((text, index) => (
-              <AutoFontSize
-                key={index}
-                lineHeight={text.length > 6 ? 1 : 1.4}
-                fontSize={text.length > 6 ? 72 : 80}
-              >
-                {text.map((t, idx) => (
-                  <div key={idx}>{t}</div>
-                ))}
-              </AutoFontSize>
+              <AutoFontSize key={index}>{text}</AutoFontSize>
             ))}
           />
         </TabPane>
