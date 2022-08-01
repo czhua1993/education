@@ -4,7 +4,7 @@ import { useState } from 'react'
 
 import { AutoFontSize } from '../../components/auto-font-size'
 import { PrintPage } from '../../components/print-page'
-import { list, list2 } from './data'
+import { list } from './data'
 
 const { TabPane } = Tabs
 
@@ -14,26 +14,26 @@ export default function Poetry() {
   return (
     <div style={{ width: '300mm' }} className="mx-auto">
       <Tabs size="large" activeKey={tab} onChange={setTab}>
-        <TabPane tab="奥特曼-字" key="1">
+        <TabPane tab="省" key="1">
           <PrintPage
-            row={12}
-            col={9}
+            row={9}
+            col={4}
             content={list.map((text, index) => (
-              <AutoFontSize key={index}>{text}</AutoFontSize>
+              <AutoFontSize key={index} fontSize={72}>
+                {text[0]}
+              </AutoFontSize>
             ))}
           />
         </TabPane>
-        <TabPane tab="奥特曼-名称" key="2">
+        <TabPane tab="省会" key="2">
           <PrintPage
-            row={8}
-            col={3}
-            content={list2.map((text, index) => (
-              <AutoFontSize key={index}>
-                {text
-                  .filter((i) => i)
-                  .map((t, idx) => (
-                    <div key={idx}>{t}</div>
-                  ))}
+            row={9}
+            col={4}
+            content={list.map((text, index) => (
+              <AutoFontSize key={index} fontSize={72}>
+                {text[1]}
+                <br />
+                {text[2]}
               </AutoFontSize>
             ))}
           />

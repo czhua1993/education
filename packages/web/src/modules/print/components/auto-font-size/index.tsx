@@ -21,7 +21,8 @@ export const AutoFontSize = (props: AutoFontSizeProps) => {
     if (ref.current) {
       const parent = ref.current.parentNode as HTMLDivElement
       while (
-        ref.current.clientWidth > parent.clientWidth &&
+        (ref.current.clientWidth > parent.clientWidth ||
+          ref.current.clientHeight > parent.clientHeight) &&
         parseInt(ref.current.style.fontSize) > 12
       ) {
         ref.current.style.fontSize =
