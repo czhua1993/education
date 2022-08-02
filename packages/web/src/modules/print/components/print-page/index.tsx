@@ -86,9 +86,10 @@ export const PrintPage = (props: PrintPageProps) => {
                   {new Array(col).fill('').map((_td, tdIdx) => {
                     const start = trIdx * col
                     const end = (trIdx + 1) * col
+                    const old = [...chunk, ...new Array(col).fill(null)]
                     const list = flip
-                      ? chunk.slice(start, end).reverse()
-                      : chunk.slice(start, end)
+                      ? old.slice(start, end).reverse()
+                      : old.slice(start, end)
                     return (
                       <td key={tdIdx}>
                         <div style={itemStyle}>{list[tdIdx]}</div>
