@@ -3,14 +3,12 @@ import { Op } from 'sequelize'
 import { Poetry } from '../model/poetry'
 
 export const poetryService = {
-  findAndCountAll: async (
-    params: {
-      offset: number
-      limit: number
-    },
-    search: Record<string, string> = {}
-  ) => {
-    const { offset, limit } = params
+  findAndCountAll: async (params: {
+    offset: number
+    limit: number
+    search: Record<string, string>
+  }) => {
+    const { offset, limit, search = {} } = params
     const where: Record<string, any> = {}
     Object.keys(search).forEach((key) => {
       if (search[key]) {
@@ -20,8 +18,8 @@ export const poetryService = {
       }
     })
     return Poetry.findAndCountAll({
-      offset,
-      limit,
+      offset: offset ?? 0,
+      limit: limit ?? 10,
       where,
     })
   },

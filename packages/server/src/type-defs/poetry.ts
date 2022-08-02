@@ -16,8 +16,17 @@ export const poetry = gql`
     rows: [Poetry]
   }
 
+  input PoetriesSearch {
+    poetryId: String
+    title: String
+    author: String
+    paragraphs: String
+    tags: String
+    dynasty: String
+  }
+
   extend type Query {
     poetry(id: Int): Poetry
-    poetries(offset: Int = 0, limit: Int = 10): Poetries
+    poetries(offset: Int = 0, limit: Int = 10, search: PoetriesSearch): Poetries
   }
 `
