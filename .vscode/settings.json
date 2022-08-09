@@ -1,6 +1,6 @@
 {
   "editor.formatOnSave": true,
-  "cSpell.words": ["ahooks", "tailwindcss"],
+  "cSpell.words": ["ahooks", "beita", "epub", "shuke", "tailwindcss"],
   "importSorter.importStringConfiguration.hasSemicolon": false,
   "importSorter.generalConfiguration.sortOnBeforeSave": true,
   "importSorter.importStringConfiguration.maximumNumberOfImportExpressionsPerLine.type": "newLineEachExpressionAfterCountLimitExceptIfOnlyOne",
