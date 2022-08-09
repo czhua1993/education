@@ -1,7 +1,9 @@
 import React from 'react'
 
+import { bookRoutes } from '@/modules/book/routes'
 import { poetryRoutes } from '@/modules/poetry/routes'
 import {
+  BookOutlined,
   HomeOutlined,
   PrinterOutlined,
   SnippetsOutlined,
@@ -25,6 +27,7 @@ export const routes = [
   },
   ...printRoutes,
   ...poetryRoutes,
+  ...bookRoutes,
 ]
 
 export const menu = [
@@ -45,6 +48,17 @@ export const menu = [
       {
         path: '/poetry/mine',
         name: '我的诗词',
+      },
+    ],
+  },
+  {
+    path: '/book',
+    name: '儿童书籍',
+    icon: <BookOutlined />,
+    routes: [
+      {
+        path: '/book/list',
+        name: '书本列表',
       },
     ],
   },
