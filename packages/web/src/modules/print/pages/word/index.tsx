@@ -12,7 +12,7 @@ export default function Poetry() {
   const [tab, setTab] = useState('1')
 
   return (
-    <div style={{ width: '300mm' }} className="mx-auto">
+    <div style={{ width: '300mm' }} className="mx-auto bg-white px-5">
       <Tabs size="large" activeKey={tab} onChange={setTab}>
         <TabPane tab="奥特曼-字" key="1">
           <PrintPage

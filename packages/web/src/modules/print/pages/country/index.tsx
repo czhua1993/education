@@ -17,7 +17,7 @@ const list = _.flatMap(textList.map((key, index) => [key, Alpha2List[index]]))
 export default function PrintCountry() {
   const [tab, setTab] = useState('1')
   return (
-    <div style={{ width: '300mm' }} className="mx-auto">
+    <div style={{ width: '300mm' }} className="mx-auto bg-white px-5">
       <Tabs size="large" activeKey={tab} onChange={setTab}>
         <TabPane tab="国家" key="1">
           <PrintPage

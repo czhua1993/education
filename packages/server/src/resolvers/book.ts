@@ -1,4 +1,3 @@
-import { service } from '../database/services'
 import { fileThousandYears, shukeBeita } from '../epub'
 
 export const bookResolvers = {

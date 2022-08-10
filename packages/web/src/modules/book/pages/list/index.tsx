@@ -15,7 +15,11 @@ export default function BookList() {
   return (
     <div>
       {bookList.map((book) => (
-        <Link to={`/book/list/${book.code}`} className="text-xl m-10">
+        <Link
+          key={book.name}
+          to={`/book/list/${book.code}`}
+          className="text-xl m-10"
+        >
           {book.name}
         </Link>
       ))}
