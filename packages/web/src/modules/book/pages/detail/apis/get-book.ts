@@ -7,7 +7,12 @@ export const getBook = async (code: string) => {
   }
   const {
     data: { book },
-  } = await client.query({
+  } = await client.query<{
+    book: {
+      title: string
+      chapterList: Array<{ id: string; title: string }>
+    }
+  }>({
     query: gql`
       query getBook($code: String) {
         book(code: $code) {

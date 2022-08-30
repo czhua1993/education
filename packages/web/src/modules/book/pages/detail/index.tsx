@@ -1,21 +1,18 @@
 import './index.less'
 
-import { useRequest } from 'ahooks'
-import { Button } from 'antd'
+import { useBoolean, useRequest } from 'ahooks'
+import { Button, Checkbox } from 'antd'
 import { useRef, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useReactToPrint } from 'react-to-print'
 
 import { getBook } from './apis/get-book'
-import { getChapter } from './apis/get-chapter'
+import { Chapter } from './components/chapter'
 
 export default function BookDetail() {
   const { code } = useParams<{ code: string }>()
   const { data: book } = useRequest(() => getBook(code!))
-  const [chapterId, setChapterId] = useState('')
-  const { data: chapter } = useRequest(() => getChapter(code!, chapterId), {
-    refreshDeps: [chapterId],
-  })
+  const [chapterList, setChapterList] = useState<string[]>([])
 
   const ref = useRef<HTMLDivElement>(null)
   const handlePrint = useReactToPrint({
@@ -32,17 +29,30 @@ export default function BookDetail() {
       </div>
       <div className="flex-1 flex overflow-auto">
         <div className="flex-shrink-0 overflow-auto py-2 border-0 border-r border-solid border-r-gray-100">
-          {book?.chapterList.map((chapter: any) =>
+          {book?.chapterList.map((chapter) =>
             chapter.title ? (
-              <a
-                key={chapter.id}
-                className="block"
-                onClick={() => {
-                  setChapterId(chapter.id)
-                }}
-              >
-                {chapter.title}
-              </a>
+              <div>
+                <Checkbox
+                  checked={chapterList.indexOf(chapter.id) > -1}
+                  onChange={() => {
+                    const index = chapterList.indexOf(chapter.id)
+                    const newList = [...chapterList]
+                    if (index > -1) {
+                      newList.splice(index, 1)
+                      setChapterList(newList)
+                    } else {
+                      newList.push(chapter.id)
+                      setChapterList(
+                        book?.chapterList
+                          .filter((chapter) => newList.indexOf(chapter.id) > -1)
+                          .map((chapter) => chapter.id)
+                      )
+                    }
+                  }}
+                >
+                  <a key={chapter.id}>{chapter.title}</a>
+                </Checkbox>
+              </div>
             ) : null
           )}
         </div>
@@ -52,11 +62,11 @@ export default function BookDetail() {
               打印
             </Button>
           </div>
-          <div
-            ref={ref}
-            className="chapter"
-            dangerouslySetInnerHTML={{ __html: chapter?.text || '' }}
-          />
+          <div ref={ref} className="chapter">
+            {chapterList.map((chapterId) => (
+              <Chapter code={code!} chapterId={chapterId} />
+            ))}
+          </div>
         </div>
       </div>
     </div>
