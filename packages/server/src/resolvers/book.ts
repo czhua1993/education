@@ -47,13 +47,64 @@ export const bookResolvers = {
           })
           shukeBeita.parse()
         } else if (args.code === 'five-thousand-years') {
-          fileThousandYears.getChapter(args.id, (error, text) => {
-            resolve({
-              id: args.id,
-              title: '',
-              text,
+          fileThousandYears.on('end', () => {
+            fileThousandYears.getChapter(args.id, (error, text) => {
+              resolve({
+                id: args.id,
+                title: '',
+                text,
+              })
             })
           })
+          fileThousandYears.parse()
+        } else {
+          return null
+        }
+      })
+    },
+    chapterList: (
+      parent,
+      args: { code: string; ids: string[] },
+      context,
+      info
+    ) => {
+      return new Promise((resolve) => {
+        if (args.code === 'shuke-beita') {
+          shukeBeita.on('end', () => {
+            Promise.all(
+              args.ids.map(
+                (id) =>
+                  new Promise((resolve) => {
+                    shukeBeita.getChapter(id, (error, text) => {
+                      resolve({
+                        id,
+                        title: '',
+                        text,
+                      })
+                    })
+                  })
+              )
+            ).then((res) => resolve(res))
+          })
+          shukeBeita.parse()
+        } else if (args.code === 'five-thousand-years') {
+          fileThousandYears.on('end', () => {
+            Promise.all(
+              args.ids.map(
+                (id) =>
+                  new Promise((resolve) => {
+                    fileThousandYears.getChapter(id, (error, text) => {
+                      resolve({
+                        id,
+                        title: '',
+                        text,
+                      })
+                    })
+                  })
+              )
+            ).then((res) => resolve(res))
+          })
+          fileThousandYears.parse()
         } else {
           return null
         }

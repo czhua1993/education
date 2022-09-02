@@ -3,6 +3,7 @@ import './index.less'
 import { useBoolean, useRequest } from 'ahooks'
 import { Button, Checkbox } from 'antd'
 import { useRef, useState } from 'react'
+import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useParams } from 'react-router-dom'
 import { useReactToPrint } from 'react-to-print'
 
@@ -61,6 +62,13 @@ export default function BookDetail() {
             <Button type="primary" onClick={handlePrint}>
               打印
             </Button>
+            <CopyToClipboard
+              text={`${window.location.protocol}//${
+                window.location.host
+              }/book/print/${code}?chapterList=${JSON.stringify(chapterList)}`}
+            >
+              <Button className="ml-2">复制地址</Button>
+            </CopyToClipboard>
           </div>
           <div ref={ref} className="chapter">
             {chapterList.map((chapterId) => (

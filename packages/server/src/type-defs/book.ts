@@ -15,5 +15,6 @@ export const book = gql`
   extend type Query {
     chapter(code: String, id: String): Chapter
     book(code: String): Book
+    chapterList(code: String, ids: [String]): [Chapter]
   }
 `
