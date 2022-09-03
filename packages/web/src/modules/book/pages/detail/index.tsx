@@ -1,20 +1,20 @@
 import './index.less'
 
-import { useBoolean, useMemoizedFn, useRequest } from 'ahooks'
+import { useMemoizedFn, useRequest } from 'ahooks'
 import { Button, Checkbox } from 'antd'
 import { useRef, useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useParams } from 'react-router-dom'
 import { useReactToPrint } from 'react-to-print'
 
-import { getChapterList } from '../pdf/apis/get-chapter-list'
-import { getBook } from './apis/get-book'
+import { getBook } from '../../apis/get-book'
+import { getChapterList } from '../../apis/get-chapter-list'
 import { Chapter } from './components/chapter'
 import { saveAsDocx } from './save-as-docx'
 
 export default function BookDetail() {
-  const { code } = useParams<{ code: string }>()
-  const { data: book } = useRequest(() => getBook(code!))
+  const { name } = useParams<{ name: string }>()
+  const { data: book } = useRequest(() => getBook(name!))
   const [chapterList, setChapterList] = useState<string[]>([])
   const ref = useRef<HTMLDivElement>(null)
 
@@ -23,7 +23,7 @@ export default function BookDetail() {
   })
 
   const download = useMemoizedFn(async () => {
-    const data = await getChapterList(code!, chapterList)
+    const data = await getChapterList(name!, chapterList)
     console.log(data)
     saveAsDocx(data!)
   })
@@ -34,36 +34,34 @@ export default function BookDetail() {
       style={{ height: 'calc(100vh - 150px)' }}
     >
       <div className="text-center text-2xl pb-2 font-bold border-0 border-b border-solid border-b-gray-100">
-        {book?.title}
+        {book?.name}
       </div>
       <div className="flex-1 flex overflow-auto">
         <div className="flex-shrink-0 overflow-auto py-2 border-0 border-r border-solid border-r-gray-100">
-          {book?.chapterList.map((chapter) =>
-            chapter.title ? (
-              <div>
-                <Checkbox
-                  checked={chapterList.indexOf(chapter.id) > -1}
-                  onChange={() => {
-                    const index = chapterList.indexOf(chapter.id)
-                    const newList = [...chapterList]
-                    if (index > -1) {
-                      newList.splice(index, 1)
-                      setChapterList(newList)
-                    } else {
-                      newList.push(chapter.id)
-                      setChapterList(
-                        book?.chapterList
-                          .filter((chapter) => newList.indexOf(chapter.id) > -1)
-                          .map((chapter) => chapter.id)
-                      )
-                    }
-                  }}
-                >
-                  <a key={chapter.id}>{chapter.title}</a>
-                </Checkbox>
-              </div>
-            ) : null
-          )}
+          {book?.chapterList.map((chapter) => (
+            <div key={chapter.id}>
+              <Checkbox
+                checked={chapterList.indexOf(chapter.id) > -1}
+                onChange={() => {
+                  const index = chapterList.indexOf(chapter.id)
+                  const newList = [...chapterList]
+                  if (index > -1) {
+                    newList.splice(index, 1)
+                    setChapterList(newList)
+                  } else {
+                    newList.push(chapter.id)
+                    setChapterList(
+                      book?.chapterList
+                        .filter((chapter) => newList.indexOf(chapter.id) > -1)
+                        .map((chapter) => chapter.id)
+                    )
+                  }
+                }}
+              >
+                <a key={chapter.id}>{chapter.title || chapter.id}</a>
+              </Checkbox>
+            </div>
+          ))}
         </div>
         <div className="flex-1 overflow-auto px-5 pt-5 relative">
           <div className="absolute right-4 top-4">
@@ -73,7 +71,7 @@ export default function BookDetail() {
             <CopyToClipboard
               text={`${window.location.protocol}//${
                 window.location.host
-              }/book/print/${code}?chapterList=${JSON.stringify(chapterList)}`}
+              }/book/print/${name}?chapterList=${JSON.stringify(chapterList)}`}
             >
               <Button className="ml-2">复制地址</Button>
             </CopyToClipboard>
@@ -83,7 +81,7 @@ export default function BookDetail() {
           </div>
           <div ref={ref} className="chapter">
             {chapterList.map((chapterId) => (
-              <Chapter code={code!} chapterId={chapterId} />
+              <Chapter code={name!} chapterId={chapterId} />
             ))}
           </div>
         </div>

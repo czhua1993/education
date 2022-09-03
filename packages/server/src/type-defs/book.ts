@@ -8,13 +8,14 @@ export const book = gql`
   }
 
   type Book {
-    title: String
+    name: String
     chapterList: [Chapter]
   }
 
   extend type Query {
-    chapter(code: String, id: String): Chapter
-    book(code: String): Book
-    chapterList(code: String, ids: [String]): [Chapter]
+    books: [Book]
+    book(name: String): Book
+    chapter(book: String, id: String): Chapter
+    chapterList(book: String, ids: [String]): [Chapter]
   }
 `

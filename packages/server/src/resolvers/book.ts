@@ -1,116 +1,72 @@
-import { fileThousandYears, shukeBeita } from '../epub'
+import { getBooks } from '../epub'
 
 export const bookResolvers = {
   Query: {
-    book: (parent, args: { code: string }) => {
-      return new Promise((resolve) => {
-        console.log(args.code, args.code === 'shuke-beita')
-        if (args.code === 'shuke-beita') {
-          shukeBeita.on('end', () => {
-            console.log(shukeBeita.flow.length, '222222222222')
-            resolve({
-              title: '舒克和贝塔',
-              chapterList: shukeBeita.flow.map((c) => ({
-                id: c.id,
-                title: c.title,
-                text: '',
-              })),
-            })
-          })
-          shukeBeita.parse()
-        } else if (args.code === 'five-thousand-years') {
-          fileThousandYears.on('end', () => {
-            resolve({
-              title: '上下五千年',
-              chapterList: fileThousandYears.flow.map((c) => ({
-                id: c.id,
-                title: c.title,
-                text: '',
-              })),
-            })
-          })
-          fileThousandYears.parse()
-        } else {
-          return null
-        }
-      })
+    books: async () => {
+      const books = await getBooks()
+      return Object.entries(books).map(([name, book]) => ({
+        name,
+        chapterList: book.flow.map((c) => ({
+          id: c.id,
+          title: c.title,
+          text: '',
+        })),
+      }))
     },
-    chapter: (parent, args: { code: string; id: string }, context, info) => {
-      return new Promise((resolve) => {
-        if (args.code === 'shuke-beita') {
-          shukeBeita.on('end', () => {
-            shukeBeita.getChapter(args.id, (error, text) => {
-              resolve({
-                id: args.id,
-                title: '',
-                text,
+    book: async (parent, args: { name: string }) => {
+      const books = await getBooks()
+      const book = books[args.name]
+      return {
+        name: args.name,
+        chapterList: book.flow.map((c) => ({
+          id: c.id,
+          title: c.title,
+          text: '',
+        })),
+      }
+    },
+    chapter: async (parent, args: { book: string; id: string }) => {
+      const books = await getBooks()
+      const epub = books[args.book]
+      const chapterList = epub.flow.map((c) => ({
+        id: c.id,
+        title: c.title,
+        text: '',
+      }))
+      const chapter = await new Promise((resolve) => {
+        epub.getChapter(args.id, (error, text) => {
+          resolve({
+            id: args.id,
+            title: chapterList.find((c) => c.id === args.id)?.title,
+            text,
+          })
+        })
+      })
+      return chapter
+    },
+    chapterList: async (parent, args: { book: string; ids: string[] }) => {
+      const books = await getBooks()
+      const epub = books[args.book]
+      const list = epub.flow.map((c) => ({
+        id: c.id,
+        title: c.title,
+        text: '',
+      }))
+      const chapterList = await Promise.all(
+        args.ids.map(
+          (id) =>
+            new Promise((resolve) => {
+              epub.getChapter(id, (error, text) => {
+                resolve({
+                  id,
+                  title: list.find((c) => c.id === id)?.title,
+                  text,
+                })
               })
             })
-          })
-          shukeBeita.parse()
-        } else if (args.code === 'five-thousand-years') {
-          fileThousandYears.on('end', () => {
-            fileThousandYears.getChapter(args.id, (error, text) => {
-              resolve({
-                id: args.id,
-                title: '',
-                text,
-              })
-            })
-          })
-          fileThousandYears.parse()
-        } else {
-          return null
-        }
-      })
-    },
-    chapterList: (
-      parent,
-      args: { code: string; ids: string[] },
-      context,
-      info
-    ) => {
-      return new Promise((resolve) => {
-        if (args.code === 'shuke-beita') {
-          shukeBeita.on('end', () => {
-            Promise.all(
-              args.ids.map(
-                (id) =>
-                  new Promise((resolve) => {
-                    shukeBeita.getChapter(id, (error, text) => {
-                      resolve({
-                        id,
-                        title: '',
-                        text,
-                      })
-                    })
-                  })
-              )
-            ).then((res) => resolve(res))
-          })
-          shukeBeita.parse()
-        } else if (args.code === 'five-thousand-years') {
-          fileThousandYears.on('end', () => {
-            Promise.all(
-              args.ids.map(
-                (id) =>
-                  new Promise((resolve) => {
-                    fileThousandYears.getChapter(id, (error, text) => {
-                      resolve({
-                        id,
-                        title: '',
-                        text,
-                      })
-                    })
-                  })
-              )
-            ).then((res) => resolve(res))
-          })
-          fileThousandYears.parse()
-        } else {
-          return null
-        }
-      })
+        )
+      )
+      return chapterList
     },
   },
 }

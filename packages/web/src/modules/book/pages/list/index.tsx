@@ -1,23 +1,17 @@
+import { useRequest } from 'ahooks'
 import { Link } from 'react-router-dom'
 
-const bookList = [
-  {
-    code: 'shuke-beita',
-    name: '舒克和贝塔',
-  },
-  {
-    code: 'five-thousand-years',
-    name: '上下五千年',
-  },
-]
+import { getBooks } from '../../apis/get-books'
 
 export default function BookList() {
+  const { data: books } = useRequest(getBooks)
+
   return (
     <div>
-      {bookList.map((book) => (
+      {books?.map((book) => (
         <Link
           key={book.name}
-          to={`/book/list/${book.code}`}
+          to={`/book/list/${book.name}`}
           className="text-xl m-10"
         >
           {book.name}

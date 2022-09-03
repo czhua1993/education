@@ -1,7 +1,7 @@
 import { useRequest } from 'ahooks'
 import { Spin } from 'antd'
 
-import { getChapter } from '../../apis/get-chapter'
+import { getChapter } from '@/modules/book/apis/get-chapter'
 
 export const Chapter = (props: { code: string; chapterId: string }) => {
   const { code, chapterId } = props

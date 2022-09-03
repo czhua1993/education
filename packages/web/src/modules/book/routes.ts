@@ -22,15 +22,15 @@ export const bookRoutes = [
         component: BookList,
       },
       {
-        path: 'list/:code',
+        path: 'list/:name',
         component: BookDetail,
       },
       {
-        path: 'print/:code',
+        path: 'print/:name',
         component: BookPrint,
       },
       {
-        path: 'pdf/:code',
+        path: 'pdf/:name',
         component: BookPDF,
       },
     ],
