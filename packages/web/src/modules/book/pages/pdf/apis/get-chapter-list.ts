@@ -31,6 +31,8 @@ export const getChapterList = async (code: string, ids: string[]) => {
         title = item.innerText
       } else if (item.innerText) {
         texts.push('　　' + (item.innerText || ''))
+      } else if (item.innerHTML === '<br>') {
+        texts.push('')
       }
     }
     return { title, texts }

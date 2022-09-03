@@ -4,8 +4,10 @@ export const bookResolvers = {
   Query: {
     book: (parent, args: { code: string }) => {
       return new Promise((resolve) => {
+        console.log(args.code, args.code === 'shuke-beita')
         if (args.code === 'shuke-beita') {
           shukeBeita.on('end', () => {
+            console.log(shukeBeita.flow.length, '222222222222')
             resolve({
               title: '舒克和贝塔',
               chapterList: shukeBeita.flow.map((c) => ({

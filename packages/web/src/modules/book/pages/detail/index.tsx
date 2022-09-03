@@ -1,23 +1,31 @@
 import './index.less'
 
-import { useBoolean, useRequest } from 'ahooks'
+import { useBoolean, useMemoizedFn, useRequest } from 'ahooks'
 import { Button, Checkbox } from 'antd'
 import { useRef, useState } from 'react'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import { useParams } from 'react-router-dom'
 import { useReactToPrint } from 'react-to-print'
 
+import { getChapterList } from '../pdf/apis/get-chapter-list'
 import { getBook } from './apis/get-book'
 import { Chapter } from './components/chapter'
+import { saveAsDocx } from './save-as-docx'
 
 export default function BookDetail() {
   const { code } = useParams<{ code: string }>()
   const { data: book } = useRequest(() => getBook(code!))
   const [chapterList, setChapterList] = useState<string[]>([])
-
   const ref = useRef<HTMLDivElement>(null)
+
   const handlePrint = useReactToPrint({
     content: () => ref.current!,
+  })
+
+  const download = useMemoizedFn(async () => {
+    const data = await getChapterList(code!, chapterList)
+    console.log(data)
+    saveAsDocx(data!)
   })
 
   return (
@@ -69,6 +77,9 @@ export default function BookDetail() {
             >
               <Button className="ml-2">复制地址</Button>
             </CopyToClipboard>
+            <Button type="primary" className="ml-2" onClick={download}>
+              下载
+            </Button>
           </div>
           <div ref={ref} className="chapter">
             {chapterList.map((chapterId) => (
